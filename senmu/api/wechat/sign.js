@@ -6,8 +6,8 @@ const axios  = require('axios');
 const crypto = require('crypto');
 
 // ⬇⬇⬇ 替换为你的公众号信息 ⬇⬇⬇
-const APPID     = '你的AppID';      // 例如：wx1234567890abcdef
-const APPSECRET = '你的AppSecret';  // 在公众号后台 → 开发 → 基本配置 中获取
+const APPID     = 'wx550f5b8f4553c5b2';      // 例如：wx1234567890abcdef
+const APPSECRET = '2d5b6b9c1a7e90f3843bd26c08d58985';  // 在公众号后台 → 开发 → 基本配置 中获取
 // ⬆⬆⬆ 替换为你的公众号信息 ⬆⬆⬆
 
 // 内存缓存（Serverless 函数实例存活期间有效）
