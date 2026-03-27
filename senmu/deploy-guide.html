@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>森木 · 部署上线完整指南</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: #F0F7EE;
+  color: #1A2E1A;
+  line-height: 1.7;
+}
+
+/* 顶部 */
+.header {
+  background: linear-gradient(135deg, #1B5E20, #2E7D32);
+  color: white;
+  padding: 40px 24px 32px;
+  text-align: center;
+}
+.header h1 { font-size: 1.6rem; margin-bottom: 8px; letter-spacing: 0.05em; }
+.header p  { font-size: 0.9rem; opacity: 0.8; }
+
+/* 内容区 */
+.container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+/* 路线选择卡 */
+.route-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+@media(max-width:500px){ .route-cards{ grid-template-columns:1fr; } }
+
+.route-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+.route-card.recommended { border-color: #4CAF50; }
+.route-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(46,125,50,0.15); }
+.route-badge {
+  display: inline-block;
+  background: #4CAF50;
+  color: white;
+  font-size: 0.68rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+.route-card h3 { font-size: 1rem; color: #1B5E20; margin-bottom: 6px; }
+.route-card p  { font-size: 0.82rem; color: #5A7A5A; }
+
+/* 章节块 */
+.section {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.step-num {
+  width: 32px; height: 32px;
+  background: #2E7D32;
+  color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; font-weight: 700;
+  flex-shrink: 0;
+}
+.section-title h2 { font-size: 1.05rem; color: #1B5E20; }
+
+/* 步骤列表 */
+.steps { list-style: none; }
+.steps li {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #F0F7EE;
+  font-size: 0.88rem;
+}
+.steps li:last-child { border-bottom: none; }
+.steps .arrow { color: #4CAF50; font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+
+/* 代码块 */
+.code-block {
+  background: #1A2E1A;
+  color: #A5D6A7;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.82rem;
+  line-height: 1.8;
+  margin: 12px 0;
+  overflow-x: auto;
+  position: relative;
+}
+.code-block .comment { color: #4CAF50; opacity: 0.7; }
+.code-block .key     { color: #80CBC4; }
+.code-block .val     { color: #FFD54F; }
+.code-block .str     { color: #F48FB1; }
+
+.copy-btn {
+  position: absolute;
+  top: 8px; right: 10px;
+  background: rgba(255,255,255,0.12);
+  border: none;
+  color: #A5D6A7;
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.copy-btn:hover { background: rgba(255,255,255,0.22); }
+
+/* 提示框 */
+.tip {
+  display: flex;
+  gap: 10px;
+  background: #E8F5E9;
+  border-left: 4px solid #4CAF50;
+  border-radius: 0 8px 8px 0;
+  padding: 12px 14px;
+  margin: 12px 0;
+  font-size: 0.84rem;
+  color: #2E4A2E;
+}
+.tip.warn {
+  background: #FFF8E1;
+  border-color: #FF8F00;
+  color: #4A3000;
+}
+.tip.info {
+  background: #E3F2FD;
+  border-color: #1565C0;
+  color: #0D2060;
+}
+.tip-icon { flex-shrink: 0; font-size: 1rem; }
+
+/* 图示 */
+.diagram {
+  background: #F8FBF8;
+  border: 1px dashed #A5D6A7;
+  border-radius: 10px;
+  padding: 16px;
+  margin: 12px 0;
+  font-size: 0.82rem;
+  color: #3A5A3A;
+}
+.diagram .path {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 6px 0;
+}
+.path-item {
+  background: #C8E6C9;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+.path-arrow { color: #66BB6A; font-size: 1.1rem; }
+
+/* 替换说明 */
+.replace-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+  margin: 12px 0;
+}
+.replace-table th {
+  background: #E8F5E9;
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #1B5E20;
+}
+.replace-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid #F0F7EE;
+  vertical-align: top;
+}
+.replace-table .old-val { color: #c62828; font-family: monospace; font-size: 0.8rem; }
+.replace-table .new-val { color: #2E7D32; font-family: monospace; font-size: 0.8rem; }
+
+/* 底部 */
+.final-box {
+  background: linear-gradient(135deg, #1B5E20, #2E7D32);
+  color: white;
+  border-radius: 16px;
+  padding: 28px 24px;
+  text-align: center;
+  margin-top: 28px;
+}
+.final-box h3 { font-size: 1.1rem; margin-bottom: 10px; }
+.final-box p  { font-size: 0.85rem; opacity: 0.85; line-height: 1.9; }
+
+/* tab切换 */
+.tab-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.tab-btn {
+  padding: 7px 16px;
+  border-radius: 8px;
+  border: 1px solid #C8E6C9;
+  background: white;
+  color: #5A7A5A;
+  font-size: 0.83rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background: #2E7D32;
+  color: white;
+  border-color: #2E7D32;
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🌲 森木上线完整指南</h1>
+  <p>从零开始 · 手机微信可访问 · 朋友圈分享卡片</p>
+</div>
+
+<div class="container">
+
+  <!-- 选路线 -->
+  <div style="margin-bottom:12px;font-size:0.9rem;color:#5A7A5A;font-weight:600;">选择你的部署方式：</div>
+  <div class="route-cards">
+    <div class="route-card recommended">
+      <div class="route-badge">⭐ 最推荐</div>
+      <h3>🚀 Vercel 免费部署</h3>
+      <p>无需服务器，5分钟上线，送免费域名，适合个人工作室</p>
+    </div>
+    <div class="route-card">
+      <div class="route-badge" style="background:#1565C0">已有服务器</div>
+      <h3>🖥️ 自有服务器</h3>
+      <p>已有云服务器（阿里云/腾讯云等），直接上传即可</p>
+    </div>
+  </div>
+
+  <!-- ============ VERCEL 路线 ============ -->
+  <div id="vercel-guide">
+
+    <!-- 第一步 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="step-num">1</div>
+        <h2>注册 GitHub 账号（已有跳过）</h2>
+      </div>
+      <ul class="steps">
+        <li><span class="arrow">→</span> 打开 <strong>github.com</strong>，点右上角 <strong>Sign up</strong></li>
+        <li><span class="arrow">→</span> 填邮箱、密码、用户名，完成验证</li>
+        <li><span class="arrow">→</span> 登录后进入主页</li>
+      </ul>
+    </div>
+
+    <!-- 第二步 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="step-num">2</div>
+        <h2>把森木文件上传到 GitHub</h2>
+      </div>
+      <ul class="steps">
+        <li><span class="arrow">→</span> 点右上角 <strong>+</strong> → <strong>New repository</strong></li>
+        <li><span class="arrow">→</span> Repository name 填：<strong>senmu-crystal</strong></li>
+        <li><span class="arrow">→</span> 选 <strong>Public</strong>（公开，Vercel 免费版需要）</li>
+        <li><span class="arrow">→</span> 点 <strong>Create repository</strong></li>
+        <li><span class="arrow">→</span> 进入仓库页面，点 <strong>uploading an existing file</strong></li>
+        <li><span class="arrow">→</span> 把以下文件全部拖进去上传：</li>
+      </ul>
+      <div class="diagram">
+        <div>需要上传的文件（全选拖入）：</div>
+        <div class="path" style="margin-top:10px;flex-wrap:wrap;gap:6px;">
+          <span class="path-item">index.html</span>
+          <span class="path-item">styles.css</span>
+          <span class="path-item">app.js</span>
+          <span class="path-item">server.js</span>
+          <span class="path-item">package.json</span>
+          <span class="path-item">share-cover.png</span>
+        </div>
+        <div style="margin-top:8px;font-size:0.78rem;color:#5A7A5A;">⚠️ share-cover.png 需要你先截图保存（见第4步）</div>
+      </div>
+      <ul class="steps">
+        <li><span class="arrow">→</span> 点底部 <strong>Commit changes</strong> 完成上传</li>
+      </ul>
+    </div>
+
+    <!-- 第三步 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="step-num">3</div>
+        <h2>用 Vercel 部署，获得公网链接</h2>
+      </div>
+      <ul class="steps">
+        <li><span class="arrow">→</span> 打开 <strong>vercel.com</strong>，点 <strong>Sign Up</strong></li>
+        <li><span class="arrow">→</span> 选 <strong>Continue with GitHub</strong>，授权登录</li>
+        <li><span class="arrow">→</span> 点 <strong>Add New → Project</strong></li>
+        <li><span class="arrow">→</span> 找到 <strong>senmu-crystal</strong> 仓库，点 <strong>Import</strong></li>
+        <li><span class="arrow">→</span> Framework Preset 选 <strong>Other</strong>（不是 Next.js）</li>
+        <li><span class="arrow">→</span> 点 <strong>Deploy</strong> → 等待约30秒</li>
+        <li><span class="arrow">→</span> 部署成功后，你会得到一个链接，例如：</li>
+      </ul>
+      <div class="code-block">
+        <span class="val">https://senmu-crystal.vercel.app</span>
+        <br><span class="comment">← 这就是你的域名！手机微信直接可以打开</span>
+      </div>
+      <div class="tip">
+        <span class="tip-icon">💡</span>
+        <div>这个链接现在就能在手机微信里打开了！先测试一下页面是否正常显示。</div>
+      </div>
+    </div>
+
+    <!-- 第四步：封面图 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="step-num">4</div>
+        <h2>制作并上传分享封面图</h2>
+      </div>
+      <ul class="steps">
+        <li><span class="arrow">→</span> 打开你的Vercel地址：<code>https://senmu-crystal.vercel.app/share-cover.html</code></li>
+        <li><span class="arrow">→</span> 用电脑截图工具截取那张 <strong>深绿星空卡片</strong>（400×400区域）</li>
+        <li><span class="arrow">→</span> 保存文件名为 <strong>share-cover.png</strong></li>
+        <li><span class="arrow">→</span> 回到 GitHub 仓库，点 <strong>Add file → Upload files</strong></li>
+        <li><span class="arrow">→</span> 上传 <strong>share-cover.png</strong>，点 <strong>Commit changes</strong></li>
+        <li><span class="arrow">→</span> Vercel 会自动重新部署（约10秒）</li>
+      </ul>
+      <div class="tip info">
+        <span class="tip-icon">📸</span>
+        <div>Windows 截图快捷键：<strong>Win + Shift + S</strong>（矩形截图），Mac：<strong>Command + Shift + 4</strong></div>
+      </div>
+    </div>
+
+    <!-- 第五步：公众号配置 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="step-num">5</div>
+        <h2>在微信公众号后台配置域名</h2>
+      </div>
+      <div class="tip warn">
+        <span class="tip-icon">⚠️</span>
+        <div>这一步决定朋友圈卡片能否正常显示，必须做！</div>
+      </div>
+      <ul class="steps">
+        <li><span class="arrow">→</span> 电脑登录 <strong>mp.weixin.qq.com</strong>（微信公众平台）</li>
+        <li><span class="arrow">→</span> 左侧菜单：<strong>设置与开发 → 公众号设置</strong></li>
+        <li><span class="arrow">→</span> 点顶部 <strong>功能设置</strong> 标签页</li>
+        <li><span class="arrow">→</span> 找到 <strong>「JS接口安全域名」</strong> 一栏，点旁边的 <strong>设置</strong></li>
+        <li><span class="arrow">→</span> 填入：<strong>senmu-crystal.vercel.app</strong>（不要加 https://）</li>
+        <li><span class="arrow">→</span> 同样位置找 <strong>「网页授权域名」</strong>，也填入同样的域名</li>
+        <li><span class="arrow">→</span> 点 <strong>保存</strong></li>
+      </ul>
+      <div class="diagram">
+        <div style="font-weight:600;margin-bottom:8px;">填写位置路径：</div>
+        <div class="path">
+          <span class="path-item">公众平台首页</span>
+          <span class="path-arrow">→</span>
+          <span class="path-item">设置与开发</span>
+          <span class="path-arrow">→</span>
+          <span class="path-item">公众号设置</span>
+          <span class="path-arrow">→</span>
+          <span class="path-item">功能设置</span>
+          <span class="path-arrow">→</span>
+          <span class="path-item">JS接口安全域名</span>
+        </div>
+        <div style="margin-top:10px;padding:10px;background:white;border-radius:8px;font-family:monospace;font-size:0.85rem;color:#2E7D32;">
+          填入：senmu-crystal.vercel.app
+        </div>
+      </div>
+      <ul class="steps">
+        <li><span class="arrow">→</span> 在同一页面找 <strong>「AppID（开发者ID）」</strong> 和 <strong>「AppSecret」</strong></li>
+        <li><span class="arrow">→</span> 路径：<strong>设置与开发 → 基本配置</strong></li>
+        <li><span class="arrow">→</span> 把这两个值记下来，下一步要用</li>
+      </ul>
+    </div>
+
+    <!-- 第六步：修改代码 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="step-num">6</div>
+        <h2>修改 index.html 中的配置信息</h2>
+      </div>
+      <p style="font-size:0.85rem;color:#5A7A5A;margin-bottom:14px;">打开 GitHub 上的 index.html，找到以下代码并替换：</p>
+
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('meta')">① Meta标签（3处）</button>
+        <button class="tab-btn" onclick="switchTab('jsconfig')">② JS配置（2处）</button>
+      </div>
+
+      <div id="tab-meta" class="tab-content active">
+        <p style="font-size:0.83rem;color:#5A7A5A;margin-bottom:10px;">在 &lt;head&gt; 里找到这几行，替换红色部分：</p>
+        <table class="replace-table">
+          <tr>
+            <th>找到（红色）</th>
+            <th>替换为（绿色）</th>
+            <th>说明</th>
+          </tr>
+          <tr>
+            <td><span class="old-val">https://你的域名/senmu/share-cover.png</span></td>
+            <td><span class="new-val">https://senmu-crystal.vercel.app/share-cover.png</span></td>
+            <td style="font-size:0.78rem;">og:image 封面图URL</td>
+          </tr>
+          <tr>
+            <td><span class="old-val">https://你的域名/senmu/</span></td>
+            <td><span class="new-val">https://senmu-crystal.vercel.app/</span></td>
+            <td style="font-size:0.78rem;">og:url 页面地址</td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="tab-jsconfig" class="tab-content">
+        <p style="font-size:0.83rem;color:#5A7A5A;margin-bottom:10px;">在 &lt;/body&gt; 前找到 WECHAT_CONFIG，替换两处：</p>
+        <div class="code-block" style="font-size:0.8rem;">
+<span class="key">const</span> <span class="val">WECHAT_CONFIG</span> = {
+  <span class="comment">// ① 签名接口地址（后端服务地址）</span>
+  <span class="key">SIGN_API_URL</span>: <span class="str">'https://senmu-crystal.vercel.app/api/wechat/sign'</span>,
+
+  <span class="comment">// ② 封面图完整URL</span>
+  <span class="key">SHARE_COVER_URL</span>: <span class="str">'https://senmu-crystal.vercel.app/share-cover.png'</span>,
+
+  <span class="comment">// 这两行不用改</span>
+  <span class="key">SHARE_TITLE</span>: <span class="str">'欢迎来到森木的宇宙寺庙 🌲'</span>,
+  <span class="key">SHARE_DESC</span>:  <span class="str">'新中式水晶首饰 · 来自大自然的能量馈赠'</span>,
+  <span class="key">SHARE_LINK</span>: window.location.href.split(<span class="str">'#'</span>)[0],
+};
+        </div>
+        <div class="tip warn">
+          <span class="tip-icon">⚠️</span>
+          <div>Vercel 是静态托管，<strong>不支持运行 Node.js 后端</strong>。<br>签名接口需要额外部署，见下方「签名服务说明」。</div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;">
+        <p style="font-size:0.84rem;color:#5A7A5A;margin-bottom:8px;">如何在 GitHub 上修改文件：</p>
+        <ul class="steps">
+          <li><span class="arrow">→</span> 进入 GitHub 仓库，点击 <strong>index.html</strong> 文件名</li>
+          <li><span class="arrow">→</span> 右上角点铅笔图标 ✏️（Edit this file）</li>
+          <li><span class="arrow">→</span> 按 <strong>Ctrl+H</strong>（查找替换），把旧值换成新值</li>
+          <li><span class="arrow">→</span> 点 <strong>Commit changes</strong> 保存</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 第七步：签名服务 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="step-num">7</div>
+        <h2>部署签名服务（让朋友圈卡片生效的关键）</h2>
+      </div>
+      <div class="tip info">
+        <span class="tip-icon">ℹ️</span>
+        <div>Vercel 免费版可以部署 Node.js 函数！把 server.js 改造成 Vercel Serverless Function 即可。</div>
+      </div>
+
+      <p style="font-size:0.85rem;color:#5A7A5A;margin:12px 0 8px;">在 GitHub 仓库里，新建文件 <strong>api/wechat/sign.js</strong>（注意路径层级）：</p>
+
+      <div class="code-block" style="font-size:0.78rem;line-height:1.9;">
+<span class="comment">// api/wechat/sign.js  ← 文件路径</span>
+<span class="comment">// Vercel Serverless Function - 签名接口</span>
+
+<span class="key">const</span> axios  = require(<span class="str">'axios'</span>);
+<span class="key">const</span> crypto = require(<span class="str">'crypto'</span>);
+
+<span class="comment">// ⬇ 填入你的公众号 AppID 和 AppSecret</span>
+<span class="key">const</span> APPID     = <span class="str">'你的AppID'</span>;
+<span class="key">const</span> APPSECRET = <span class="str">'你的AppSecret'</span>;
+
+<span class="comment">// 简单内存缓存（Serverless函数每次可能重启，生产环境建议用Redis）</span>
+<span class="key">let</span> tokenCache = { value: <span class="str">''</span>, expires: 0 };
+<span class="key">let</span> ticketCache = { value: <span class="str">''</span>, expires: 0 };
+
+<span class="key">async function</span> getAccessToken() {
+  if (tokenCache.value &amp;&amp; tokenCache.expires > Date.now()) return tokenCache.value;
+  <span class="key">const</span> r = await axios.get(
+    <span class="str">`https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&amp;appid=${APPID}&amp;secret=${APPSECRET}`</span>
+  );
+  tokenCache = { value: r.data.access_token, expires: Date.now() + 7000000 };
+  return tokenCache.value;
+}
+
+<span class="key">async function</span> getTicket() {
+  if (ticketCache.value &amp;&amp; ticketCache.expires > Date.now()) return ticketCache.value;
+  <span class="key">const</span> token = await getAccessToken();
+  <span class="key">const</span> r = await axios.get(
+    <span class="str">`https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=${token}&amp;type=jsapi`</span>
+  );
+  ticketCache = { value: r.data.ticket, expires: Date.now() + 7000000 };
+  return ticketCache.value;
+}
+
+module.exports = <span class="key">async</span> (req, res) => {
+  res.setHeader(<span class="str">'Access-Control-Allow-Origin'</span>, <span class="str">'*'</span>);
+  <span class="key">const</span> url       = req.query.url || <span class="str">''</span>;
+  <span class="key">const</span> ticket    = await getTicket();
+  <span class="key">const</span> timestamp = Math.floor(Date.now() / 1000);
+  <span class="key">const</span> nonceStr  = Math.random().toString(36).substring(2, 17);
+  <span class="key">const</span> signStr   = <span class="str">`jsapi_ticket=${ticket}&amp;noncestr=${nonceStr}&amp;timestamp=${timestamp}&amp;url=${url}`</span>;
+  <span class="key">const</span> signature = crypto.createHash(<span class="str">'sha1'</span>).update(signStr).digest(<span class="str">'hex'</span>);
+  res.json({ appId: APPID, timestamp, nonceStr, signature });
+};
+      </div>
+
+      <p style="font-size:0.85rem;color:#5A7A5A;margin:12px 0 8px;">同时修改 <strong>package.json</strong>，加入 axios 依赖：</p>
+      <div class="code-block" style="font-size:0.8rem;">
+{
+  <span class="key">"name"</span>: <span class="str">"senmu-crystal"</span>,
+  <span class="key">"dependencies"</span>: {
+    <span class="str">"axios"</span>: <span class="str">"^1.6.0"</span>
+  }
+}
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">✅</span>
+        <div>文件上传到 GitHub 后，Vercel 自动检测 <strong>api/</strong> 目录为 Serverless 函数，<strong>无需额外配置</strong>！</div>
+      </div>
+    </div>
+
+    <!-- 最终验证 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="step-num">8</div>
+        <h2>最终验证</h2>
+      </div>
+      <ul class="steps">
+        <li><span class="arrow">✓</span> 手机微信扫码或输入 <strong>senmu-crystal.vercel.app</strong> 打开页面</li>
+        <li><span class="arrow">✓</span> 点右上角「…」→「分享给朋友」→ 看到封面图和标题</li>
+        <li><span class="arrow">✓</span> 点右上角「…」→「分享到朋友圈」→ 看到封面图</li>
+        <li><span class="arrow">✓</span> 别人点卡片 → 正常跳转到森木页面</li>
+      </ul>
+    </div>
+
+  </div><!-- end vercel-guide -->
+
+  <!-- 最终总结 -->
+  <div class="final-box">
+    <h3>🌲 你的森木页面链接</h3>
+    <p>
+      部署完成后，你的链接就是：<br>
+      <strong>https://senmu-crystal.vercel.app</strong><br><br>
+      把这个链接发给任何人，手机微信点开就能进入森木的宇宙寺庙 💎<br>
+      发朋友圈时会自动显示「欢迎来到森木的宇宙寺庙 🌲」的封面卡片 ✨
+    </p>
+  </div>
+
+</div><!-- end container -->
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', (i === 0 && name === 'meta') || (i === 1 && name === 'jsconfig'));
+  });
+  document.getElementById('tab-meta').classList.toggle('active', name === 'meta');
+  document.getElementById('tab-jsconfig').classList.toggle('active', name === 'jsconfig');
+}
+</script>
+
+</body>
+</html>

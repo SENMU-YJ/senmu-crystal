@@ -1,0 +1,8 @@
+{
+  "name": "senmu-crystal",
+  "version": "1.0.0",
+  "description": "森木 SENMU CRYSTAL - 新中式水晶首饰工作室",
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}

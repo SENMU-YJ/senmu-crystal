@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>森木分享封面预览</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #1a1a2e;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Noto Serif SC', 'STSong', serif;
+    gap: 20px;
+  }
+
+  /* 主封面：400x400 正方形（微信分享图标准比例 1:1） */
+  .cover {
+    width: 400px;
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  /* 背景渐变 */
+  .bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(102,187,106,0.35) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(156,39,176,0.2) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 70%),
+      linear-gradient(145deg, #0D2B0D 0%, #1B4D1B 30%, #0D2B0D 60%, #1A0D2B 100%);
+  }
+
+  /* 星光粒子 */
+  .stars { position: absolute; inset: 0; }
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 2s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%,100% { opacity: 0.2; transform: scale(1); }
+    50%      { opacity: 0.9; transform: scale(1.4); }
+  }
+
+  /* 光晕圆圈 */
+  .glow-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(102,187,106,0.3);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .ring1 { width: 280px; height: 280px; border-color: rgba(102,187,106,0.25); animation: ringPulse 4s ease-in-out infinite; }
+  .ring2 { width: 220px; height: 220px; border-color: rgba(102,187,106,0.2); animation: ringPulse 4s ease-in-out infinite 1s; }
+  .ring3 { width: 360px; height: 360px; border-color: rgba(102,187,106,0.12); animation: ringPulse 4s ease-in-out infinite 2s; }
+  @keyframes ringPulse {
+    0%,100% { opacity: 0.5; transform: translate(-50%,-50%) scale(1); }
+    50%      { opacity: 1;   transform: translate(-50%,-50%) scale(1.04); }
+  }
+
+  /* 内容区 */
+  .content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    z-index: 10;
+  }
+
+  /* 顶部小装饰 */
+  .top-deco {
+    font-size: 1.3rem;
+    letter-spacing: 12px;
+    opacity: 0.7;
+    margin-bottom: 18px;
+  }
+
+  /* 主标题 森木 */
+  .main-title {
+    font-size: 5.5rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.15em;
+    line-height: 1;
+    text-shadow:
+      0 0 30px rgba(102,187,106,0.8),
+      0 0 60px rgba(102,187,106,0.4),
+      0 2px 4px rgba(0,0,0,0.5);
+    margin-bottom: 10px;
+  }
+
+  /* SENMU CRYSTAL */
+  .sub-title {
+    font-family: 'Cinzel', 'Georgia', serif;
+    font-size: 0.9rem;
+    color: rgba(165,214,167,0.85);
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+
+  /* 分割线 */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 22px;
+    width: 200px;
+  }
+  .div-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(165,214,167,0.6), transparent);
+  }
+  .div-crystal { font-size: 0.9rem; opacity: 0.8; }
+
+  /* 邀请语 */
+  .invite {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.12em;
+    line-height: 1.7;
+    text-align: center;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.4);
+    margin-bottom: 8px;
+  }
+
+  /* 副邀请语 */
+  .invite-sub {
+    font-size: 0.72rem;
+    color: rgba(165,214,167,0.65);
+    letter-spacing: 0.1em;
+    margin-bottom: 24px;
+  }
+
+  /* 底部按钮样式文字 */
+  .cta {
+    padding: 9px 22px;
+    border: 1px solid rgba(102,187,106,0.5);
+    border-radius: 20px;
+    background: rgba(102,187,106,0.15);
+    color: rgba(165,214,167,0.9);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    backdrop-filter: blur(4px);
+  }
+
+  /* 底部装饰 */
+  .bottom-deco {
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.65rem;
+    color: rgba(165,214,167,0.35);
+    letter-spacing: 0.15em;
+  }
+
+  /* 角落水晶装饰 */
+  .corner-crystal {
+    position: absolute;
+    font-size: 1.6rem;
+    opacity: 0.3;
+  }
+  .cc-tl { top: 18px; left: 20px; }
+  .cc-tr { top: 18px; right: 20px; }
+  .cc-bl { bottom: 36px; left: 20px; }
+  .cc-br { bottom: 36px; right: 20px; }
+
+  /* 说明文字 */
+  .tips {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.78rem;
+    max-width: 420px;
+    text-align: center;
+    line-height: 1.8;
+    letter-spacing: 0.03em;
+  }
+  .tips strong { color: #66BB6A; }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- 封面卡片 -->
+<div class="cover" id="cover">
+  <!-- 背景 -->
+  <div class="bg"></div>
+
+  <!-- 星光 -->
+  <div class="stars" id="stars"></div>
+
+  <!-- 光晕 -->
+  <div class="glow-ring ring3"></div>
+  <div class="glow-ring ring1"></div>
+  <div class="glow-ring ring2"></div>
+
+  <!-- 角落装饰 -->
+  <div class="corner-crystal cc-tl">🌿</div>
+  <div class="corner-crystal cc-tr">💎</div>
+  <div class="corner-crystal cc-bl">🔮</div>
+  <div class="corner-crystal cc-br">🌸</div>
+
+  <!-- 主内容 -->
+  <div class="content">
+    <div class="top-deco">✦ ✦ ✦</div>
+
+    <div class="main-title">森木</div>
+    <div class="sub-title">SENMU CRYSTAL</div>
+
+    <div class="divider">
+      <div class="div-line"></div>
+      <span class="div-crystal">🌿</span>
+      <div class="div-line"></div>
+    </div>
+
+    <div class="invite">欢迎来到森木的宇宙寺庙</div>
+    <div class="invite-sub">新中式水晶首饰 · 大自然的能量馈赠</div>
+
+    <div class="cta">点击进入 · 感受水晶的灵气</div>
+  </div>
+
+  <!-- 底部署名 -->
+  <div class="bottom-deco">SENMU CRYSTAL STUDIO · 森木水晶工作室</div>
+</div>
+
+<div class="tips">
+  ⬆ 这是朋友圈分享卡片的封面图预览（400×400px）<br>
+  <strong>截图保存</strong>此图片，或用浏览器截图工具保存为 <strong>share-cover.png</strong><br>
+  上传到服务器后，填入 index.html 中的 <strong>SHARE_COVER_URL</strong>
+</div>
+
+<script>
+// 生成星光粒子
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 50; i++) {
+  const s = document.createElement('div');
+  const size = Math.random() * 2 + 1;
+  s.className = 'star';
+  s.style.cssText = `
+    width: ${size}px;
+    height: ${size}px;
+    left: ${Math.random() * 100}%;
+    top: ${Math.random() * 100}%;
+    animation-delay: ${Math.random() * 3}s;
+    animation-duration: ${Math.random() * 2 + 1.5}s;
+  `;
+  starsEl.appendChild(s);
+}
+</script>
+</body>
+</html>

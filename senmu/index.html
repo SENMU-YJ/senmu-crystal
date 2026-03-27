@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>森木 · SENMU CRYSTAL</title>
+
+  <!-- ===== Open Graph / 微信分享 Meta 标签 ===== -->
+  <!-- 这些标签让微信读取分享信息，封面图需替换为你服务器上的真实URL -->
+  <meta property="og:title"       content="欢迎来到森木的宇宙寺庙 🌲">
+  <meta property="og:description" content="新中式水晶首饰 · 来自大自然的能量馈赠 · 森木 SENMU CRYSTAL">
+  <meta property="og:image"       content="https://你的域名/senmu/share-cover.png">
+  <meta property="og:image:width"  content="400">
+  <meta property="og:image:height" content="400">
+  <meta property="og:url"         content="https://你的域名/senmu/">
+  <meta property="og:type"        content="website">
+  <meta name="description"        content="新中式水晶首饰 · 来自大自然的能量馈赠 · 森木 SENMU CRYSTAL">
+
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- 微信 JS-SDK -->
+  <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+</head>
+<body>
+
+<!-- ==================== 登入页 ==================== -->
+<div id="page-login" class="page active">
+  <!-- 背景装饰 -->
+  <div class="login-bg">
+    <div class="leaf leaf-1">🌿</div>
+    <div class="leaf leaf-2">🍃</div>
+    <div class="leaf leaf-3">🌸</div>
+    <div class="leaf leaf-4">✨</div>
+    <div class="leaf leaf-5">🌱</div>
+    <div class="leaf leaf-6">🍀</div>
+    <div class="crystal-bg crystal-1">💎</div>
+    <div class="crystal-bg crystal-2">🔮</div>
+    <div class="crystal-bg crystal-3">💠</div>
+    <!-- 浮动粒子 -->
+    <div class="particles" id="particles"></div>
+  </div>
+
+  <!-- 中央内容 -->
+  <div class="login-center">
+    <div class="login-logo-wrap">
+      <div class="logo-ring"></div>
+      <h1 class="logo-title">森木</h1>
+    </div>
+    <p class="logo-sub">SENMU CRYSTAL</p>
+    <div class="login-divider">
+      <span class="divider-leaf">🌿</span>
+      <span class="divider-line"></span>
+      <span class="divider-crystal">💎</span>
+      <span class="divider-line"></span>
+      <span class="divider-leaf">🌿</span>
+    </div>
+    <p class="login-quote" id="loginQuote">正在为你感应今日水晶能量…</p>
+    <button class="login-btn" id="enterBtn" onclick="enterShowPage()">
+      <span class="btn-icon">🌲</span>
+      <span class="btn-text">立即进入森木的宇宙寺庙</span>
+      <span class="btn-shimmer"></span>
+    </button>
+  </div>
+
+  <!-- 左下角小树 -->
+  <div class="corner-tree" id="cornerTree" onclick="openTreeModal()" title="神秘小树 · 点我">
+    <div class="tree-body">
+      <svg viewBox="0 0 80 100" width="80" height="100">
+        <!-- 树干 -->
+        <rect x="34" y="72" width="12" height="22" rx="4" fill="#8B6914"/>
+        <rect x="36" y="80" width="3" height="8" rx="2" fill="#6B4F0A" opacity="0.5"/>
+        <!-- 树冠层3 -->
+        <ellipse cx="40" cy="62" rx="22" ry="16" fill="#4CAF50"/>
+        <!-- 树冠层2 -->
+        <ellipse cx="40" cy="45" rx="18" ry="14" fill="#66BB6A"/>
+        <!-- 树冠层1 -->
+        <ellipse cx="40" cy="30" rx="14" ry="12" fill="#81C784"/>
+        <!-- 高光 -->
+        <ellipse cx="34" cy="26" rx="5" ry="4" fill="#A5D6A7" opacity="0.6"/>
+        <!-- 小花装饰 -->
+        <circle cx="26" cy="55" r="3" fill="#FFB7C5"/>
+        <circle cx="54" cy="52" r="2.5" fill="#FFD1DC"/>
+        <circle cx="40" cy="20" r="2" fill="#FFF9C4"/>
+        <!-- 水晶装饰 -->
+        <polygon points="50,40 54,48 46,48" fill="#B2EBF2" opacity="0.8"/>
+        <polygon points="28,45 31,52 25,52" fill="#E1BEE7" opacity="0.7"/>
+      </svg>
+    </div>
+    <div class="tree-hint">✨</div>
+  </div>
+
+  <!-- 小树认证弹窗 -->
+  <div class="tree-modal" id="treeModal">
+    <div class="tree-modal-overlay" onclick="closeTreeModal()"></div>
+    <div class="tree-modal-box">
+      <!-- 弹窗装饰 -->
+      <div class="modal-deco modal-deco-tl">
+        <svg viewBox="0 0 60 40" width="60" height="40">
+          <path d="M5,35 Q15,5 30,10 Q45,5 55,35" stroke="#66BB6A" stroke-width="2" fill="none"/>
+          <circle cx="15" cy="18" r="4" fill="#FFB7C5"/>
+          <circle cx="30" cy="10" r="3" fill="#FFD1DC"/>
+          <circle cx="45" cy="16" r="4" fill="#F8BBD9"/>
+        </svg>
+      </div>
+      <div class="modal-deco modal-deco-br">
+        <svg viewBox="0 0 60 40" width="60" height="40">
+          <path d="M5,5 Q20,35 35,30 Q50,35 55,5" stroke="#81C784" stroke-width="2" fill="none"/>
+          <circle cx="20" cy="22" r="3" fill="#B2EBF2"/>
+          <circle cx="35" cy="30" r="4" fill="#E1BEE7"/>
+        </svg>
+      </div>
+
+      <div class="modal-title-area">
+        <span class="modal-tree-icon">🌳</span>
+        <h3 class="modal-title">森木秘境验证</h3>
+        <span class="modal-tree-icon">🌳</span>
+      </div>
+
+      <div class="modal-question-wrap">
+        <div class="modal-crystal-icon">💎</div>
+        <p class="modal-question" id="modalQuestion">加载中…</p>
+      </div>
+
+      <div class="modal-input-wrap">
+        <input
+          type="text"
+          id="modalInput"
+          class="modal-input"
+          placeholder="请在此输入答案…"
+          onkeydown="if(event.key==='Enter') checkAnswer()"
+        />
+        <div class="input-leaf">🌿</div>
+      </div>
+      <p class="modal-hint" id="modalHint"></p>
+      <button class="modal-btn" onclick="checkAnswer()">
+        <span>🌱 进入素材寺庙</span>
+      </button>
+      <button class="modal-close" onclick="closeTreeModal()">✕</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==================== 展示页 ==================== -->
+<div id="page-show" class="page">
+
+  <!-- 顶部导航 -->
+  <nav class="show-nav">
+    <div class="nav-logo" onclick="goLogin()">
+      <span class="nav-logo-text">森木</span>
+      <span class="nav-logo-sub">SENMU CRYSTAL</span>
+    </div>
+    <div class="nav-right">
+      <span class="nav-leaf">🌿</span>
+      <span class="nav-tagline">大自然的馈赠 · 水晶的能量</span>
+    </div>
+  </nav>
+
+  <!-- Section 1: 轮播图 -->
+  <section class="section-banner">
+    <div class="banner-slider" id="bannerSlider">
+      <div class="banner-slide active" style="background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 40%, #388E3C 70%, #C8E6C9 100%);">
+        <div class="banner-content">
+          <div class="banner-crystals">
+            <span class="b-crystal b-c1">💚</span>
+            <span class="b-crystal b-c2">🔮</span>
+            <span class="b-crystal b-c3">✨</span>
+          </div>
+          <h2 class="banner-title">森木·绿野水晶系列</h2>
+          <p class="banner-sub">来自深山老林的能量馈赠</p>
+          <div class="banner-jewels">
+            <div class="jewel-item" id="bannerItem0">
+              <div class="jewel-showcase">
+                <div class="jewel-crystal-display">
+                  <svg viewBox="0 0 120 160" width="120" height="160">
+                    <!-- 项链主链 -->
+                    <path d="M15,20 Q60,-5 105,20 Q90,60 75,90 Q65,110 60,130 Q55,110 45,90 Q30,60 15,20Z" fill="none" stroke="#C8E6C9" stroke-width="1.5" opacity="0.6"/>
+                    <!-- 水晶吊坠 -->
+                    <polygon points="60,110 50,135 60,148 70,135" fill="#4CAF50" opacity="0.85"/>
+                    <polygon points="60,110 50,135 60,148 70,135" fill="url(#greenGrad)" />
+                    <polygon points="60,110 55,125 60,120 65,125" fill="#A5D6A7" opacity="0.6"/>
+                    <!-- 小水晶 -->
+                    <polygon points="45,95 40,108 45,115 50,108" fill="#66BB6A" opacity="0.7"/>
+                    <polygon points="75,95 70,108 75,115 80,108" fill="#81C784" opacity="0.7"/>
+                    <!-- 链珠 -->
+                    <circle cx="30" cy="35" r="3" fill="#A5D6A7"/>
+                    <circle cx="20" cy="55" r="3" fill="#C8E6C9"/>
+                    <circle cx="90" cy="35" r="3" fill="#A5D6A7"/>
+                    <circle cx="100" cy="55" r="3" fill="#C8E6C9"/>
+                    <defs>
+                      <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#A5D6A7"/>
+                        <stop offset="100%" style="stop-color:#2E7D32"/>
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+              </div>
+              <p class="jewel-name">翠光项链</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="banner-slide" style="background: linear-gradient(135deg, #4A148C 0%, #7B1FA2 40%, #AB47BC 70%, #F3E5F5 100%);">
+        <div class="banner-content">
+          <div class="banner-crystals">
+            <span class="b-crystal b-c1">💜</span>
+            <span class="b-crystal b-c2">🔮</span>
+            <span class="b-crystal b-c3">✨</span>
+          </div>
+          <h2 class="banner-title">森木·紫晶花朵系列</h2>
+          <p class="banner-sub">花朵与紫晶的浪漫邂逅</p>
+          <div class="banner-jewels">
+            <div class="jewel-item">
+              <div class="jewel-showcase">
+                <div class="jewel-crystal-display">
+                  <svg viewBox="0 0 120 160" width="120" height="160">
+                    <!-- 手链 -->
+                    <ellipse cx="60" cy="90" rx="45" ry="12" fill="none" stroke="#E1BEE7" stroke-width="2" opacity="0.7"/>
+                    <!-- 紫水晶珠子 -->
+                    <circle cx="20" cy="90" r="8" fill="#9C27B0" opacity="0.8"/>
+                    <circle cx="20" cy="90" r="4" fill="#CE93D8" opacity="0.5"/>
+                    <circle cx="40" cy="82" r="7" fill="#7B1FA2" opacity="0.85"/>
+                    <circle cx="60" cy="80" r="9" fill="#AB47BC" opacity="0.8"/>
+                    <circle cx="60" cy="80" r="4" fill="#E1BEE7" opacity="0.5"/>
+                    <circle cx="80" cy="82" r="7" fill="#7B1FA2" opacity="0.85"/>
+                    <circle cx="100" cy="90" r="8" fill="#9C27B0" opacity="0.8"/>
+                    <!-- 花朵装饰 -->
+                    <circle cx="60" cy="115" r="6" fill="#F8BBD9"/>
+                    <circle cx="53" cy="108" r="4" fill="#FCE4EC"/>
+                    <circle cx="67" cy="108" r="4" fill="#FCE4EC"/>
+                    <circle cx="55" cy="121" r="4" fill="#FCE4EC"/>
+                    <circle cx="65" cy="121" r="4" fill="#FCE4EC"/>
+                    <circle cx="60" cy="115" r="3" fill="#FFD1DC"/>
+                    <!-- 高光 -->
+                    <circle cx="57" cy="78" r="2" fill="white" opacity="0.7"/>
+                  </svg>
+                </div>
+              </div>
+              <p class="jewel-name">紫晶花手链</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="banner-slide" style="background: linear-gradient(135deg, #BF360C 0%, #E64A19 30%, #FF7043 60%, #FFF3E0 100%);">
+        <div class="banner-content">
+          <div class="banner-crystals">
+            <span class="b-crystal b-c1">🔴</span>
+            <span class="b-crystal b-c2">💫</span>
+            <span class="b-crystal b-c3">✨</span>
+          </div>
+          <h2 class="banner-title">森木·琥珀暖光系列</h2>
+          <p class="banner-sub">承载万年时光的自然琥珀</p>
+          <div class="banner-jewels">
+            <div class="jewel-item">
+              <div class="jewel-showcase">
+                <div class="jewel-crystal-display">
+                  <svg viewBox="0 0 120 160" width="120" height="160">
+                    <!-- 手串 -->
+                    <circle cx="60" cy="85" r="38" fill="none" stroke="#FFCCBC" stroke-width="2" opacity="0.6" stroke-dasharray="5,3"/>
+                    <!-- 琥珀珠 -->
+                    <circle cx="60" cy="47" r="10" fill="#FF8F00" opacity="0.85"/>
+                    <circle cx="60" cy="47" r="5" fill="#FFCA28" opacity="0.5"/>
+                    <circle cx="88" cy="60" r="9" fill="#F57F17" opacity="0.8"/>
+                    <circle cx="96" cy="85" r="10" fill="#FF8F00" opacity="0.85"/>
+                    <circle cx="88" cy="110" r="9" fill="#F57F17" opacity="0.8"/>
+                    <circle cx="60" cy="123" r="10" fill="#FF8F00" opacity="0.85"/>
+                    <circle cx="32" cy="110" r="9" fill="#F57F17" opacity="0.8"/>
+                    <circle cx="24" cy="85" r="10" fill="#FF8F00" opacity="0.85"/>
+                    <circle cx="32" cy="60" r="9" fill="#F57F17" opacity="0.8"/>
+                    <!-- 金属扣 -->
+                    <rect x="55" cy="45" width="10" height="5" rx="2" fill="#FFD700" opacity="0.8"/>
+                    <!-- 高光 -->
+                    <circle cx="57" cy="45" r="3" fill="white" opacity="0.6"/>
+                    <circle cx="93" cy="83" r="3" fill="white" opacity="0.5"/>
+                  </svg>
+                </div>
+              </div>
+              <p class="jewel-name">琥珀暖光手串</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 轮播控制 -->
+    <button class="banner-prev" onclick="slideBanner(-1)">‹</button>
+    <button class="banner-next" onclick="slideBanner(1)">›</button>
+    <div class="banner-dots" id="bannerDots">
+      <span class="dot active" onclick="goSlide(0)"></span>
+      <span class="dot" onclick="goSlide(1)"></span>
+      <span class="dot" onclick="goSlide(2)"></span>
+    </div>
+  </section>
+
+  <!-- Section 2: 最新上新 -->
+  <section class="show-section" id="section-new">
+    <div class="section-header">
+      <div class="section-title-wrap">
+        <span class="section-dot">🌸</span>
+        <h2 class="section-title">最新上新</h2>
+      </div>
+      <button class="more-btn" onclick="goShowMore('new')">
+        <span class="more-tree">🌲</span>
+        <span>更多</span>
+      </button>
+    </div>
+    <div class="product-grid" id="grid-new"></div>
+  </section>
+
+  <!-- Section 3: 手串/手链 -->
+  <section class="show-section" id="section-bracelet">
+    <div class="section-header">
+      <div class="section-title-wrap">
+        <span class="section-dot">💫</span>
+        <h2 class="section-title">手串 / 手链</h2>
+      </div>
+      <button class="more-btn" onclick="goShowMore('bracelet')">
+        <span class="more-tree">🌲</span>
+        <span>更多</span>
+      </button>
+    </div>
+    <div class="product-grid" id="grid-bracelet"></div>
+  </section>
+
+  <!-- Section 4: 项链/摆件 -->
+  <section class="show-section" id="section-necklace">
+    <div class="section-header">
+      <div class="section-title-wrap">
+        <span class="section-dot">🌿</span>
+        <h2 class="section-title">项链 / 摆件</h2>
+      </div>
+      <button class="more-btn" onclick="goShowMore('necklace')">
+        <span class="more-tree">🌲</span>
+        <span>更多</span>
+      </button>
+    </div>
+    <div class="product-grid" id="grid-necklace"></div>
+  </section>
+
+  <!-- 底部 -->
+  <footer class="show-footer">
+    <div class="footer-logo">森木 · SENMU CRYSTAL</div>
+    <p class="footer-text">🌿 来自大自然的水晶能量 · 每一颗都有灵魂 🔮</p>
+    <p class="footer-copy">© 2026 SENMU CRYSTAL STUDIO · 森木水晶工作室</p>
+  </footer>
+</div>
+
+
+<!-- ==================== 素材上传页 ==================== -->
+<div id="page-upload" class="page">
+
+  <!-- 顶部导航 -->
+  <nav class="upload-nav">
+    <div class="nav-logo" onclick="goLogin()">
+      <span class="nav-logo-text">森木</span>
+      <span class="nav-logo-sub">管理后台</span>
+    </div>
+    <button class="back-show-btn" onclick="enterShowPage()">
+      <span>🌿</span> 返回展示页
+    </button>
+  </nav>
+
+  <!-- 上传页 Section 1: 轮播图素材 -->
+  <section class="upload-section" id="upload-banner">
+    <div class="upload-section-header">
+      <div class="upload-title-wrap">
+        <span class="upload-dot">🌅</span>
+        <h2 class="upload-title">轮播图</h2>
+        <button class="upload-tree-btn" onclick="toggleUploadPanel('banner')" title="管理素材">
+          <svg viewBox="0 0 40 50" width="28" height="28">
+            <rect x="16" y="36" width="8" height="12" rx="3" fill="#8B6914"/>
+            <ellipse cx="20" cy="30" rx="12" ry="9" fill="#4CAF50"/>
+            <ellipse cx="20" cy="21" rx="10" ry="8" fill="#66BB6A"/>
+            <ellipse cx="20" cy="13" rx="8" ry="7" fill="#81C784"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="upload-panel" id="panel-banner" style="display:none">
+      <div class="upload-actions">
+        <button class="upload-add-btn" onclick="triggerUpload('banner')">
+          <span>➕</span> 添加素材
+          <input type="file" id="file-banner" accept="image/*" multiple style="display:none" onchange="handleUpload(event,'banner')">
+        </button>
+      </div>
+      <div class="upload-grid" id="upload-grid-banner"></div>
+    </div>
+  </section>
+
+  <!-- 上传页 Section 2: 最新上新素材 -->
+  <section class="upload-section" id="upload-new">
+    <div class="upload-section-header">
+      <div class="upload-title-wrap">
+        <span class="upload-dot">🌸</span>
+        <h2 class="upload-title">最新上新</h2>
+        <button class="upload-tree-btn" onclick="toggleUploadPanel('new')" title="管理素材">
+          <svg viewBox="0 0 40 50" width="28" height="28">
+            <rect x="16" y="36" width="8" height="12" rx="3" fill="#8B6914"/>
+            <ellipse cx="20" cy="30" rx="12" ry="9" fill="#4CAF50"/>
+            <ellipse cx="20" cy="21" rx="10" ry="8" fill="#66BB6A"/>
+            <ellipse cx="20" cy="13" rx="8" ry="7" fill="#81C784"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="upload-panel" id="panel-new" style="display:none">
+      <div class="upload-actions">
+        <button class="upload-add-btn" onclick="triggerUpload('new')">
+          <span>➕</span> 添加素材
+          <input type="file" id="file-new" accept="image/*" multiple style="display:none" onchange="handleUpload(event,'new')">
+        </button>
+      </div>
+      <div class="upload-grid" id="upload-grid-new"></div>
+    </div>
+  </section>
+
+  <!-- 上传页 Section 3: 手串/手链素材 -->
+  <section class="upload-section" id="upload-bracelet">
+    <div class="upload-section-header">
+      <div class="upload-title-wrap">
+        <span class="upload-dot">💫</span>
+        <h2 class="upload-title">手串 / 手链</h2>
+        <button class="upload-tree-btn" onclick="toggleUploadPanel('bracelet')" title="管理素材">
+          <svg viewBox="0 0 40 50" width="28" height="28">
+            <rect x="16" y="36" width="8" height="12" rx="3" fill="#8B6914"/>
+            <ellipse cx="20" cy="30" rx="12" ry="9" fill="#4CAF50"/>
+            <ellipse cx="20" cy="21" rx="10" ry="8" fill="#66BB6A"/>
+            <ellipse cx="20" cy="13" rx="8" ry="7" fill="#81C784"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="upload-panel" id="panel-bracelet" style="display:none">
+      <div class="upload-actions">
+        <button class="upload-add-btn" onclick="triggerUpload('bracelet')">
+          <span>➕</span> 添加素材
+          <input type="file" id="file-bracelet" accept="image/*" multiple style="display:none" onchange="handleUpload(event,'bracelet')">
+        </button>
+      </div>
+      <div class="upload-grid" id="upload-grid-bracelet"></div>
+    </div>
+  </section>
+
+  <!-- 上传页 Section 4: 项链/摆件素材 -->
+  <section class="upload-section" id="upload-necklace">
+    <div class="upload-section-header">
+      <div class="upload-title-wrap">
+        <span class="upload-dot">🌿</span>
+        <h2 class="upload-title">项链 / 摆件</h2>
+        <button class="upload-tree-btn" onclick="toggleUploadPanel('necklace')" title="管理素材">
+          <svg viewBox="0 0 40 50" width="28" height="28">
+            <rect x="16" y="36" width="8" height="12" rx="3" fill="#8B6914"/>
+            <ellipse cx="20" cy="30" rx="12" ry="9" fill="#4CAF50"/>
+            <ellipse cx="20" cy="21" rx="10" ry="8" fill="#66BB6A"/>
+            <ellipse cx="20" cy="13" rx="8" ry="7" fill="#81C784"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="upload-panel" id="panel-necklace" style="display:none">
+      <div class="upload-actions">
+        <button class="upload-add-btn" onclick="triggerUpload('necklace')">
+          <span>➕</span> 添加素材
+          <input type="file" id="file-necklace" accept="image/*" multiple style="display:none" onchange="handleUpload(event,'necklace')">
+        </button>
+      </div>
+      <div class="upload-grid" id="upload-grid-necklace"></div>
+    </div>
+  </section>
+
+  <!-- 底部 -->
+  <footer class="show-footer">
+    <div class="footer-logo">森木 · SENMU CRYSTAL</div>
+    <p class="footer-text">🌿 素材管理后台 · 用心记录每一颗水晶 🔮</p>
+  </footer>
+</div>
+
+<!-- 全局提示 Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+
+<!-- ===== 微信 JS-SDK 分享配置 ===== -->
+<script>
+/**
+ * 微信分享配置
+ * ⚠️ 使用前必须：
+ *   1. 在微信公众号后台 → 公众号设置 → 功能设置 → 网页授权域名，填入你的域名
+ *   2. 在公众号后台 → 开发 → 基本配置，获取 AppID 和 AppSecret
+ *   3. 部署下方的后端签名接口（见 wechat-sign.md 文档）
+ *   4. 将下方 SIGN_API_URL 替换为你后端签名接口的真实地址
+ *   5. 将 SHARE_COVER_URL 替换为封面图的真实URL
+ */
+
+const WECHAT_CONFIG = {
+  // ⬇ 替换为你的后端签名接口地址（见配套文档 wechat-sign.md）
+  SIGN_API_URL: 'https://你的域名/api/wechat/sign',
+
+  // ⬇ 替换为封面图的真实访问URL（上传 share-cover.png 到服务器后填写）
+  SHARE_COVER_URL: 'https://你的域名/senmu/share-cover.png',
+
+  // 分享标题（朋友圈卡片标题）
+  SHARE_TITLE: '欢迎来到森木的宇宙寺庙 🌲',
+
+  // 分享给朋友时的描述
+  SHARE_DESC: '新中式水晶首饰 · 来自大自然的能量馈赠',
+
+  // 点击卡片后跳转的链接（你的页面URL）
+  SHARE_LINK: window.location.href.split('#')[0],
+};
+
+// 判断是否在微信内置浏览器中
+function isWeChat() {
+  return /MicroMessenger/i.test(navigator.userAgent);
+}
+
+// 初始化微信分享
+async function initWechatShare() {
+  if (!isWeChat()) return; // 非微信环境跳过
+
+  try {
+    // 向后端请求签名（后端需要返回 appId, timestamp, nonceStr, signature）
+    const res = await fetch(
+      WECHAT_CONFIG.SIGN_API_URL + '?url=' + encodeURIComponent(window.location.href.split('#')[0])
+    );
+    if (!res.ok) throw new Error('签名接口请求失败');
+    const sign = await res.json();
+
+    // 配置 JS-SDK
+    wx.config({
+      debug: false,                        // 上线后改为 false
+      appId:     sign.appId,               // 公众号 AppID
+      timestamp: sign.timestamp,
+      nonceStr:  sign.nonceStr,
+      signature: sign.signature,
+      jsApiList: [
+        'updateAppMessageShareData',       // 分享给朋友（新接口）
+        'updateTimelineShareData',         // 分享到朋友圈（新接口）
+        // 兼容旧版本
+        'onMenuShareTimeline',
+        'onMenuShareAppMessage',
+      ],
+    });
+
+    wx.ready(function () {
+      // 分享给朋友 —— 好友聊天卡片
+      wx.updateAppMessageShareData({
+        title:   WECHAT_CONFIG.SHARE_TITLE,
+        desc:    WECHAT_CONFIG.SHARE_DESC,
+        link:    WECHAT_CONFIG.SHARE_LINK,
+        imgUrl:  WECHAT_CONFIG.SHARE_COVER_URL,
+        success: function () { console.log('[森木] 好友分享配置成功'); }
+      });
+
+      // 分享到朋友圈 —— 朋友圈卡片（标题+图片，无描述）
+      wx.updateTimelineShareData({
+        title:  WECHAT_CONFIG.SHARE_TITLE,
+        link:   WECHAT_CONFIG.SHARE_LINK,
+        imgUrl: WECHAT_CONFIG.SHARE_COVER_URL,
+        success: function () { console.log('[森木] 朋友圈分享配置成功'); }
+      });
+
+      // 兼容旧版本 iOS
+      wx.onMenuShareTimeline({
+        title:   WECHAT_CONFIG.SHARE_TITLE,
+        link:    WECHAT_CONFIG.SHARE_LINK,
+        imgUrl:  WECHAT_CONFIG.SHARE_COVER_URL,
+      });
+      wx.onMenuShareAppMessage({
+        title:   WECHAT_CONFIG.SHARE_TITLE,
+        desc:    WECHAT_CONFIG.SHARE_DESC,
+        link:    WECHAT_CONFIG.SHARE_LINK,
+        imgUrl:  WECHAT_CONFIG.SHARE_COVER_URL,
+        type:    'link',
+      });
+    });
+
+    wx.error(function (err) {
+      console.error('[森木] JS-SDK 配置失败', err);
+    });
+
+  } catch (e) {
+    console.warn('[森木] 微信分享初始化失败（可能是非线上环境）:', e.message);
+  }
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', initWechatShare);
+</script>
+</body>
+</html>
