@@ -9,10 +9,10 @@
   <!-- 这些标签让微信读取分享信息，封面图需替换为你服务器上的真实URL -->
   <meta property="og:title"       content="欢迎来到森木的宇宙寺庙 🌲">
   <meta property="og:description" content="新中式水晶首饰 · 来自大自然的能量馈赠 · 森木 SENMU CRYSTAL">
-  <meta property="og:image"       content="https://你的域名/senmu/share-cover.png">
+  <meta property="og:image"       content="https://senmu-crystal.icu/senmu/share-cover.png">
   <meta property="og:image:width"  content="400">
   <meta property="og:image:height" content="400">
-  <meta property="og:url"         content="https://你的域名/senmu/">
+  <meta property="og:url"         content="https://senmu-crystal.icu/senmu/">
   <meta property="og:type"        content="website">
   <meta name="description"        content="新中式水晶首饰 · 来自大自然的能量馈赠 · 森木 SENMU CRYSTAL">
 
@@ -486,7 +486,7 @@
 /**
  * 微信分享配置
  * ⚠️ 使用前必须：
- *   1. 在微信公众号后台 → 公众号设置 → 功能设置 → 网页授权域名，填入你的域名
+ *   1. 在微信公众号后台 → 公众号设置 → 功能设置 → 网页授权域名，填入senmu-crystal.icu
  *   2. 在公众号后台 → 开发 → 基本配置，获取 AppID 和 AppSecret
  *   3. 部署下方的后端签名接口（见 wechat-sign.md 文档）
  *   4. 将下方 SIGN_API_URL 替换为你后端签名接口的真实地址
@@ -495,10 +495,10 @@
 
 const WECHAT_CONFIG = {
   // ⬇ 替换为你的后端签名接口地址（见配套文档 wechat-sign.md）
-  SIGN_API_URL: 'https://你的域名/api/wechat/sign',
+  SIGN_API_URL: 'https://senmu-crystal.icu/api/wechat/sign',
 
   // ⬇ 替换为封面图的真实访问URL（上传 share-cover.png 到服务器后填写）
-  SHARE_COVER_URL: 'https://你的域名/senmu/share-cover.png',
+  SHARE_COVER_URL: 'https://senmu-crystal.icu/senmu/share-cover.png',
 
   // 分享标题（朋友圈卡片标题）
   SHARE_TITLE: '欢迎来到森木的宇宙寺庙 🌲',
