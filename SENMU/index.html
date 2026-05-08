@@ -281,10 +281,10 @@ img{-webkit-user-drag:none;user-drag:none;pointer-events:auto}
 #toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(45,74,45,.92);color:#fff;padding:9px 22px;border-radius:22px;font-size:13px;font-family:'Noto Serif SC',serif;z-index:9999;letter-spacing:1px;backdrop-filter:blur(8px);opacity:0;transition:opacity .35s;pointer-events:none;white-space:nowrap}
 
 /* ---- 商品详情 ---- */
-.detail-csl{position:relative;overflow:hidden;width:100%;background:var(--crystal);touch-action:pan-y}
-.detail-track{display:flex;transition:transform .4s ease;width:100%}
-.detail-track .ds{min-width:100%;width:100%;height:0;padding-bottom:100%;position:relative}
-.detail-track .ds img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.detail-csl{position:relative;overflow:hidden;width:100%;background:var(--crystal);touch-action:pan-y;aspect-ratio:16/9}
+.detail-track{display:flex;transition:transform .4s ease;width:100%;height:100%}
+.detail-track .ds{min-width:100%;width:100%;height:100%}
+.detail-track .ds img{width:100%;height:100%;object-fit:cover}
 </style>
 </head>
 <body>
@@ -1496,8 +1496,11 @@ function afterShop(){
       _carouselTimer=setInterval(nextSlide,4500);
       // 点击控制（点击圆点时重置计时器，防止刚点完立刻自动跳）
       cslDots.innerHTML=Array.from(slides).map(function(_,i){
-        return '<button class="csl-dot'+(i===0?' on':'')+'" onclick="showSlide('+i+');resetTimer()"></button>';
+        return '<button class="csl-dot'+(i===0?' on':'')+'" onclick="_senmuShowSlide('+i+')"></button>';
       }).join('');
+      window._senmuNextSlide=function(){nextSlide();resetTimer();};
+      window._senmuPrevSlide=function(){prevSlide();resetTimer();};
+      window._senmuShowSlide=function(i){showSlide(i);resetTimer();};
       var nxt=cslWrap.querySelector('.csl-arr.nxt');
       var prv=cslWrap.querySelector('.csl-arr.prv');
       if(nxt) nxt.onclick=function(){nextSlide();resetTimer();};
@@ -1537,8 +1540,7 @@ function afterShop(){
       },{passive:true});
     }
   }
-  // 原有的定时轮播
-  _ctimer=setInterval(function(){cNext('s');},4000);
+
 }
 
 // 获取商品排序用时间戳字符串：edit/modified优先，其次ID末尾时间戳
@@ -1767,8 +1769,8 @@ function shopCarouselHTML(items){
   if(!visibleItems.length) return '';
   return '<div class="csl-wrap" id="csl-s">'
     +'<div class="csl-track" id="csl-s-track">'+slides+'</div>'
-    +'<button class="csl-arr prv" onclick="cPrev(\'s\')">&#8249;</button>'
-    +'<button class="csl-arr nxt" onclick="cNext(\'s\')">&#8250;</button>'
+    +'<button class="csl-arr prv" onclick="_senmuPrevSlide()">&#8249;</button>'
+    +'<button class="csl-arr nxt" onclick="_senmuNextSlide()">&#8250;</button>'
     +'</div>'
     +'<div class="csl-dots" id="csl-s-dots">'+dots+'</div>';
 }
@@ -1903,7 +1905,14 @@ function detailHTML(sec,id){
   var imgs=(p.images||[]).filter(function(x){return x;});
   var isBanner=sec==='carousel';
   if(!imgs.length) imgs=[isBanner?bannerSVG(p.caption||'',0):placeholderSVG((p.title||'').slice(0,4))];
-  var slides=imgs.map(function(img){return '<div class="'+(isBanner?'ds-banner':'ds')+'"><img src="'+cdnUrl(img)+'" alt="'+p.title+'" style="width:100%;height:100%;'+(isBanner?'object-fit:cover;position:absolute;top:0;left:0':'aspect-ratio:1;object-fit:cover')+'" onclick="openImgLightbox(\''+encodeURIComponent(cdnUrl(img))+'\')\"/></div>';}).join('');
+  var slides=imgs.map(function(img){
+    var src=cdnUrl(img);
+    if(isBanner){
+      return '<div class="ds-banner" onclick="openImgLightbox(\''+encodeURIComponent(src)+'\')"><img src="'+src+'" alt="'+p.title+'"/></div>';
+    } else {
+      return '<div class="ds" style="background-image:url(\''+src+'\');background-size:contain;background-repeat:no-repeat;background-position:center center;cursor:pointer" onclick="openImgLightbox(\''+encodeURIComponent(src)+'\')"></div>';
+    }
+  }).join('');
   var dots=imgs.length>1?imgs.map(function(_,i){return '<button class="csl-dot'+(i===0?' on':'')+'" onclick="dGo('+i+')"></button>';}).join(''):'';
   var tagsH=(p.tags&&p.tags.length)?p.tags.map(function(t){return '<span style="font-size:11px;padding:3px 10px;background:rgba(74,124,89,.1);color:var(--fmid);border-radius:11px;border:1px solid rgba(74,124,89,.2)">#'+t+'</span>';}).join(''):'';
   return '<div class="pg on" id="detailPage">'
