@@ -281,10 +281,10 @@ img{-webkit-user-drag:none;user-drag:none;pointer-events:auto}
 #toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(45,74,45,.92);color:#fff;padding:9px 22px;border-radius:22px;font-size:13px;font-family:'Noto Serif SC',serif;z-index:9999;letter-spacing:1px;backdrop-filter:blur(8px);opacity:0;transition:opacity .35s;pointer-events:none;white-space:nowrap}
 
 /* ---- 商品详情 ---- */
-.detail-csl{position:relative;overflow:hidden;width:100%;background:var(--crystal);touch-action:pan-y;aspect-ratio:16/9}
-.detail-track{display:flex;transition:transform .4s ease;width:100%;height:100%}
-.detail-track .ds{min-width:100%;width:100%;height:100%}
-.detail-track .ds img{width:100%;height:100%;object-fit:cover}
+.detail-csl{position:relative;overflow:hidden;width:354px;height:232px;background:var(--crystal);touch-action:pan-y;margin:0 auto}
+.detail-track{display:flex;transition:transform .4s ease;width:354px;height:232px}
+.detail-track .ds{min-width:354px;width:354px;height:232px;display:flex;align-items:center;justify-content:center}
+.detail-track .ds img{max-width:354px;max-height:232px;width:auto;height:auto;object-fit:contain}
 </style>
 </head>
 <body>
