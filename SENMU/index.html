@@ -152,13 +152,10 @@ img{-webkit-user-drag:none;user-drag:none;pointer-events:auto}
 .csl-arr.prv{left:10px}.csl-arr.nxt{right:10px}
 
 /* ---- 商品详情图片滑块 ---- */
-.detail-csl{position:relative;overflow:hidden;background:var(--crystal);touch-action:pan-y}
-.detail-track{display:flex;transition:transform .4s ease}
-.ds{min-width:100%;width:100%;height:0;padding-bottom:100%;position:relative}
-.ds img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
-/* 轮播图详情页用16:7横向比例 */
-.ds-banner{min-width:100%;width:100%;aspect-ratio:16/7;position:relative;overflow:hidden;cursor:pointer}
-.ds-banner img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.detail-csl{position:relative;overflow:hidden;width:100%;background:var(--crystal);touch-action:pan-y;aspect-ratio:1/1}
+.detail-track{display:flex;transition:transform .4s ease;width:100%;height:100%}
+.detail-track .ds,.detail-track .ds-banner{min-width:100%;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--crystal)}
+.ds img,.ds-banner img{width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain}
 
 /* ---- 滑动手势 ---- */
 .swipe-handler{overflow:hidden;touch-action:pan-y}
@@ -281,10 +278,7 @@ img{-webkit-user-drag:none;user-drag:none;pointer-events:auto}
 #toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(45,74,45,.92);color:#fff;padding:9px 22px;border-radius:22px;font-size:13px;font-family:'Noto Serif SC',serif;z-index:9999;letter-spacing:1px;backdrop-filter:blur(8px);opacity:0;transition:opacity .35s;pointer-events:none;white-space:nowrap}
 
 /* ---- 商品详情 ---- */
-.detail-csl{position:relative;overflow:hidden;width:354px;height:232px;background:var(--crystal);touch-action:pan-y;margin:0 auto}
-.detail-track{display:flex;transition:transform .4s ease;width:354px;height:232px}
-.detail-track .ds{min-width:354px;width:354px;height:232px;display:flex;align-items:center;justify-content:center}
-.detail-track .ds img{max-width:354px;max-height:232px;width:auto;height:auto;object-fit:contain}
+
 </style>
 </head>
 <body>
